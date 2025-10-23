@@ -26,7 +26,6 @@ For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](Q
 - [Repository Structure](#repository-structure)
 - [Core Utilities](#core-utilities)
 - [Citation](#citation)
-- [License](#license)
 - [Contact](#contact)
 
 ## Installation
