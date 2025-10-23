@@ -6,6 +6,7 @@ This repository implements a search pipeline for detecting Extreme Mass Ratio In
 For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](QuickStartEMRIsearch.ipynb). The notebook walks through the pipeline and produces example outputs, including:
 
 - Injected waveform and three harmonics with their corresponding detection statistic values.
+
   ![Waveform Injection](quick_start_results/true_frequency_track.png)
 
 - Top panel: the injected EMRI signal with noise. Bottom panel: the recovered signal after masking the best-fit track of the dominant harmonic.
