@@ -86,24 +86,16 @@ Data analysis and waveform helpers:
 - `da_utils.py` — SFT computation, frequency-domain inner products, noise generation, SNR calculation.
 - `emri_utils.py` — EMRI waveform and trajectory helpers
 - `search_utils.py` — detection statistics and search routines
+- `draw_population.py` — draw synthetic EMRI populations and parameter transforms.
 
 ### JAX / GPU-Accelerated Utilities
 - `jax_utils.py` — JAX implementations of core routines for GPU/TPU acceleration (PSDs, detection statistics).
 - `jax_de_utils.py` — differential-evolution optimization implemented with JAX for fast population-based searches.
-- `draw_population.py` — draw synthetic EMRI populations and parameter transforms.
 
 ## Citation
 
-If you use this code, please cite the paper linked at the top. Replace the placeholder below once the final citation is available:
-```
-[Paper citation - to be added upon publication]
-```
-
-## License
-
-License information not included here. Add a LICENSE file or update this section with the chosen license.
+If you use this code, please cite the paper []().
 
 ## Contact
 
 For questions or issues open an issue on the GitHub repository
-
