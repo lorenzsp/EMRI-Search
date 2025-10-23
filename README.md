@@ -5,11 +5,14 @@ This repository implements a search pipeline for detecting Extreme Mass Ratio In
 
 For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](QuickStartEMRIsearch.ipynb). The notebook walks through the pipeline and produces example outputs, including:
 
-- Data comparison: the injected EMRI signal (with noise) versus the recovered signal after masking the best-fit track.
+- Injected waveform and three harmonics with their corresponding detection statistic values.
+  ![Waveform Injection](quick_start_results/true_frequency_track.png)
+
+- Top panel: the injected EMRI signal with noise. Bottom panel: the recovered signal after masking the best-fit track of the dominant harmonic.
 
   ![Data Comparison](quick_start_results/data_comparison.png)
 
-- Visualizations of the optimization process and the recovered track evolution (see the GIFs above).
+- Visualizations of the optimization process and the recovered track evolution.
 
 <p align="center">
   <img src="quick_start_results/frequency_evolution_2panel_animation.gif" alt="Track Evolution" style="width:100%;"/>
@@ -70,7 +73,11 @@ Open [QuickStartEMRIsearch.ipynb](QuickStartEMRIsearch.ipynb) and run the notebo
 
 ## Repository Structure
 
-High-level layout and purpose of important files.
+High-level overview of the repository’s key files and their purposes. Each script can be run to generate a demonstration plot showing typical usage of the functions it defines. You can run all scripts with 
+
+```bash
+python da_utils.py; python emri_utils.py; python search_utils.py; python jax_utils.py; python jax_de_utils.py; python draw_population.py;
+```
 
 ### Core Utilities
 
