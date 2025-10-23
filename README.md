@@ -12,7 +12,7 @@ For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](Q
 - Visualizations of the optimization process and the recovered track evolution (see the GIFs above).
 
 <p align="center">
-  <img src="quick_start_results/frequency_evolution_animation.gif" alt="Track Evolution" style="width:100%;"/>
+  <img src="quick_start_results/frequency_evolution_2panel_animation.gif" alt="Track Evolution" style="width:100%;"/>
   <img src="quick_start_results/optimization_animation.gif" alt="Search Scatter" style="width:100%;"/>
 </p>
 
