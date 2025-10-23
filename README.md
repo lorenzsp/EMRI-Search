@@ -3,12 +3,13 @@
 
 This repository implements a search pipeline for detecting Extreme Mass Ratio Inspirals (EMRIs) in simulated LISA data. Given input LISA time-series, the pipeline returns the best-matching instantaneous frequency evolution (track) found in the data. The code accompanies the related paper: https://arxiv.org/pdf/2506.09470.
 
-Example outputs
-- Comparison between the injected EMRI signal (plus noise) and the recovered signal after masking the best-fit track. Reproduce with `QuickStartEMRIsearch.ipynb`.
+For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](QuickStartEMRIsearch.ipynb). The notebook walks through the pipeline and produces example outputs, including:
 
-![Data Comparison](quick_start_results/data_comparison.png)
+- Data comparison: the injected EMRI signal (with noise) versus the recovered signal after masking the best-fit track.
 
-- Optimization and track evolution visualizations. Reproduce with `QuickStartEMRIsearch.ipynb`.
+  ![Data Comparison](quick_start_results/data_comparison.png)
+
+- Visualizations of the optimization process and the recovered track evolution (see the GIFs above).
 
 <p align="center">
   <img src="quick_start_results/frequency_evolution_animation.gif" alt="Track Evolution" style="width:100%;"/>
@@ -20,7 +21,6 @@ Example outputs
 - [Quick Start](#quick-start)
 - [Repository Structure](#repository-structure)
 - [Core Utilities](#core-utilities)
-- [Notebooks](#notebooks)
 - [Citation](#citation)
 - [License](#license)
 - [Contact](#contact)
@@ -62,7 +62,7 @@ python da_utils.py
 
 ## Quick Start
 
-Open `QuickStartEMRIsearch.ipynb` and run the notebook. It guides you through:
+Open [QuickStartEMRIsearch.ipynb](QuickStartEMRIsearch.ipynb) and run the notebook. It guides you through:
 - generating EMRI test signals,
 - computing Short Fourier Transforms (SFTs),
 - computing the detection statistic,
@@ -71,9 +71,6 @@ Open `QuickStartEMRIsearch.ipynb` and run the notebook. It guides you through:
 ## Repository Structure
 
 High-level layout and purpose of important files.
-
-### Notebooks
-- `QuickStartEMRIsearch.ipynb` — hands-on tutorial showing full examples: signal generation, SFTs, detection statistics, and simple searches.
 
 ### Core Utilities
 
