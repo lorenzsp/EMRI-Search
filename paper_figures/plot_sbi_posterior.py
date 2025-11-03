@@ -5,6 +5,7 @@ This script loads posterior samples from posterior_samples_round_final.npy
 and creates a corner plot with custom colors.
 export PATH="/Library/TeX/texbin:$PATH"
 """
+# %%
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
@@ -335,3 +336,36 @@ for i, lab in enumerate(labels_short):
     print(f"  {lab}: est={best_sample_lls[i]:.6g}, true={truths[i]:.6g}, rel_diff={rd:.6f}%")
 
 print(truths)
+#
+plt.close('all')
+
+plt.rcParams.update({
+    'font.size': 18,
+    'axes.labelsize': 18,
+    'xtick.labelsize': 14,
+    'ytick.labelsize': 14
+})
+# %%
+plt.figure(figsize=(10, 10))
+fig = corner.corner(
+    samp_mcmc,
+    bins=30,
+    weights=np.ones_like(samp_mcmc[:, 0])/len(samp_mcmc[:, 0]),
+    levels=1 - np.exp(-0.5 * np.array([1,2,3]) ** 2),
+    labels=[r'$\log_{10} m_1$ [$M_\odot$]', r'$m_2$ [$M_\odot$]', r'$a$',  r'$T_{\rm pl}$',  r'$e_f$'],
+    fill_contours=True,
+    plot_datapoints=False,
+    title_quantiles=(threesigma , 0.5, 1-threesigma),
+    show_titles=True,
+    title_fmt=".4f",
+    title_kwargs={"fontsize": 22, "pad": 12, "color": 'C5'},
+    hist_kwargs=dict(histtype='stepfilled'),
+    color='C5',
+    truths=truths,
+    max_n_ticks=4,
+    labelpad=0.2,
+)
+plt.savefig('corner_mcmc_overlay.png', dpi=300)
+plt.tight_layout()
+plt.show()
+# %%

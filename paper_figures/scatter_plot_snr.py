@@ -152,7 +152,7 @@ if __name__ == "__main__":
     import matplotlib.patches as patches
     
     # Create figure with two subplots sharing y-axis
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(2*6.5, 3.7), sharey=True)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(2*6.5, 3.7), sharey=False)
     
     # Define the break range - adjust these values based on your data
     x_break_low = 100.0  # End of left subplot
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     # Plot on both axes
     # for ax in [ax1, ax2]:
         # Primary black holes (detected) - colored by final eccentricity
-    scatter1 = ax2.scatter(filtered_m1[detected_indices], filtered_z[detected_indices],
+    scatter1 = ax2.scatter(filtered_m1[detected_indices], filtered_distances[detected_indices],
                 c=filtered_e0[detected_indices], 
                 alpha=0.7,
                 marker='o', 
@@ -236,19 +236,14 @@ if __name__ == "__main__":
     ax1.set_xlim(1, x_break_low)  # Lower range
     ax2.set_xlim(x_break_high, filtered_m1.max() * 1.7)  # Upper range
     
-    # Set log scale for both x-axes
-    # ax1.set_xscale('log')
+    # Set log scale for m1
     ax2.set_xscale('log')
-    
-    axtwin = ax2.twinx()  # Create a twin Axes sharing the y-axis
-    axtwin.plot(filtered_z, filtered_distances, alpha=0)  # Invisible plot to set the scale
-    axtwin.spines['left'].set_visible(False)
-    axtwin.tick_params(labelleft=False, left=False)  # hide tick labels and ticks on the left
+
     # Hide the spines between ax1 and ax2
     ax1.spines['right'].set_visible(False)
     ax2.spines['left'].set_visible(False)
     # ax1.tick_params(labelright=False, right=False)  # hide tick labels and ticks on the right
-    ax2.tick_params(labelleft=False, left=False)  # hide tick labels and ticks on the left
+    ax2.tick_params(labelright=True, right=True, labelleft=False, left=False)  # hide tick labels and ticks on the left
 
     # Add diagonal lines to indicate the break
     d = .015  # size of diagonal lines
@@ -263,9 +258,9 @@ if __name__ == "__main__":
     # Labels and formatting
     ax1.set_xlabel('Source frame secondary mass [M$_\odot$]')
     ax2.set_xlabel('Source frame primary mass [M$_\odot$]')
-
-    axtwin.set_ylabel('Luminosity Distance [Gpc]')
     ax1.set_ylabel('Redshift')
+    ax2.yaxis.set_label_position('right')
+    ax2.set_ylabel('Luminosity Distance [Gpc]', loc='center')
     
     # Add legend to left subplot
     # ax1.legend(loc='upper right')
@@ -278,6 +273,10 @@ if __name__ == "__main__":
     plt.tight_layout()
     plt.savefig(f'2d_mass_distance_broken_axis_snr_{args.snr}.pdf', bbox_inches='tight', dpi=300)
     
+    # plt.figure()
+    # plt.plot(filtered_z[detected_indices], filtered_distances[detected_indices], '.')
+    # plt.show()
+    # breakpoint()
     ########################################################
     # # Scatter plot distance vs norm_ds
     # plt.figure(figsize=(6.5, 4))

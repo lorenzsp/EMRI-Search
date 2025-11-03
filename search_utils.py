@@ -134,6 +134,7 @@ def generate_emri_signal_and_sfts(true_values, T_data, T_sft, deltaT, snr_ref, T
     t = t[mask]
     snr_final = get_snr(hp, deltaT)  
     print(f"Final SNR: {snr_final}")
+    
     # update distance
     param_dict['dist'] = param_dict['dist'] * snr_sig/snr_ref
     
@@ -147,7 +148,9 @@ def generate_emri_signal_and_sfts(true_values, T_data, T_sft, deltaT, snr_ref, T
     t_alpha = np.arange(num_sfts) * T_sft
     
     # Generate noise SFTs
-    noise_sfts = compute_sfts(generate_noise(hp.shape[0], deltaT, psd), deltaT, wind, samples_per_sft)
+    noise_td = generate_noise(hp.shape[0], deltaT, psd)
+    data_td = hp + noise_td
+    noise_sfts = compute_sfts(noise_td, deltaT, wind, samples_per_sft)
     new_noise_sfts = compute_sfts(generate_noise(hp.shape[0], deltaT, psd), deltaT, wind, samples_per_sft)
     data_sfts = signal_sfts + noise_sfts
     
@@ -161,6 +164,7 @@ def generate_emri_signal_and_sfts(true_values, T_data, T_sft, deltaT, snr_ref, T
     true_phi_f_fdot_fddot = get_f_fdot_fddot_back(true_values, t_alpha)
     
     return {
+        'data_td': data_td,
         'param_dict': param_dict,
         't': t,
         'data_sfts': data_sfts,
