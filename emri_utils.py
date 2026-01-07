@@ -57,7 +57,7 @@ def get_response_generator(T, dt, waveform_model="FastKerrEccentricEquatorialFlu
     )
     return wave_gen
 
-def get_f_fdot_fddot_back(params, t_alpha):
+def get_f_fdot_fddot_back(params, t_alpha, err=1e-10):
     """
     Compute the phase, frequency, and their first and second derivatives for a backward-integrated inspiral trajectory.
     This function integrates the inspiral trajectory backwards in time, starting from the separatrix, and evaluates the orbital phase,
@@ -105,17 +105,17 @@ def get_f_fdot_fddot_back(params, t_alpha):
     # define max time based on t_alpha
     p_0 = traj.inspiral_generator.func.separatrix_buffer_dist + get_separatrix(a, ef, x0) + 1e-6
     # T = t_alpha[-1]/YRSID_SI if Tpl>t_alpha[-1] else Tpl
-    backwards_result = traj(m1, m2, a, p_0, ef, x0, T=Tpl, integrate_backwards=True)
+    backwards_result = traj(m1, m2, a, p_0, ef, x0, T=Tpl, integrate_backwards=True, err=err)
     
     t_int = traj.integrator_spline_t
     # time to plunge
     # time_to_plunge = YRSID_SI * T - t_int[::-1]
     
     # new t
-    T = np.min([Tpl, t_alpha[-1]/YRSID_SI])
-    new_t_alpha = (t_alpha + YRSID_SI * T - t_alpha[-1])[::-1]
+    # T = np.max([Tpl, t_alpha[-1]/YRSID_SI])
+    new_t_alpha = (t_alpha + YRSID_SI * Tpl - t_alpha[-1])[::-1]
     # mask = (new_t_alpha < t_int[-1])&(new_t_alpha > 0.0)
-    mask = (new_t_alpha > 0.0)
+    mask = (new_t_alpha > 0.0)# & (new_t_alpha < t_int.max())
     # print((new_t_alpha > 0.0), "\n", (new_t_alpha < t_int[-1]))
 
     shape_alpha = t_alpha.shape[0]
@@ -133,8 +133,8 @@ def get_f_fdot_fddot_back(params, t_alpha):
     
     # phi[:,mask] = cs_phase(t_alpha[mask]).T
     phi_ = traj.inspiral_generator.eval_integrator_spline(new_t_alpha[mask])
-    phi[0][mask] = phi_[:, 3] + phi_[-1, 3]
-    phi[1][mask] = phi_[:, 5] + phi_[-1, 5]
+    phi[0][mask] = phi_[:, 3]# + phi_[-1, 3]
+    phi[1][mask] = phi_[:, 5]# + phi_[-1, 5]
     # phi_ = traj.inspiral_generator.dopr.eval(t_alpha_adim, t_adim, traj.integrator_spline_coeff)
     # phi[0][mask] = -phi_[:, 3] / mass_ratio
     # phi[1][mask] = -phi_[:, 5] / mass_ratio
@@ -259,11 +259,22 @@ def create_signal(params,
 if __name__ == "__main__":
 
     import matplotlib.pyplot as plt
-    Tpl = 0.5 # 1.5 test different time to plunges
+    import time
+    Tpl = 1.0 # 1.5 test different time to plunges
     true_values = np.asarray([1e6, 10.0, 0.9, Tpl, 0.2, 1.0])
-    t_alpha = np.arange(0, YRSID_SI, 86400)
-    phi, f, dotf, dotdotf = get_f_fdot_fddot_back(true_values, t_alpha)
-    t, hp, hx = create_signal(true_values, T=0.01)
+    
+    plt.figure()
+    t_alpha = np.arange(0, YRSID_SI/2, 5e4)
+    phi_05, f_05, dotf, dotdotf = get_f_fdot_fddot_back(true_values, t_alpha)
+    plt.plot(t_alpha, phi_05[0], '-o',alpha=0.5)
+    t_alpha = np.arange(0, YRSID_SI, 5e4)
+    phi_1, f_1, dotf, dotdotf = get_f_fdot_fddot_back(true_values, t_alpha)
+    plt.plot(t_alpha, phi_1[0],'-P', alpha=0.5)
+    t_alpha = np.arange(0, 1.5*YRSID_SI, 5e4)
+    phi_15, f_15, dotf, dotdotf = get_f_fdot_fddot_back(true_values, t_alpha)
+    plt.plot(t_alpha, phi_15[0],'-X', alpha=0.5)
+    plt.show()
+    # t, hp, hx = create_signal(true_values, T=0.01)
     
     # plt.figure(figsize=(10, 6))
     # plt.plot(t, hp, label='h_plus')
@@ -275,7 +286,7 @@ if __name__ == "__main__":
     fig, axs = plt.subplots(4, 1, figsize=(10, 12), sharex=True)
 
     labels = [r'$\Phi$', r'$f$', r'$\dot{f}$', r'$\ddot{f}$']
-    y_datas = [phi, f, dotf, dotdotf]
+    y_datas = [phi_15, f_15, dotf, dotdotf]
 
     for i, ax in enumerate(axs):
         ax.axvline(true_values[3]*YRSID_SI, color='black', label='Plunge')
