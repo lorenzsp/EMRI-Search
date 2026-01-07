@@ -57,7 +57,7 @@ def get_response_generator(T, dt, waveform_model="FastKerrEccentricEquatorialFlu
     )
     return wave_gen
 
-def get_f_fdot_fddot_back(params, t_alpha, err=1e-10):
+def get_f_fdot_fddot_back(params, t_alpha, err=1e-11):
     """
     Compute the phase, frequency, and their first and second derivatives for a backward-integrated inspiral trajectory.
     This function integrates the inspiral trajectory backwards in time, starting from the separatrix, and evaluates the orbital phase,
@@ -115,7 +115,7 @@ def get_f_fdot_fddot_back(params, t_alpha, err=1e-10):
     # T = np.max([Tpl, t_alpha[-1]/YRSID_SI])
     new_t_alpha = (t_alpha + YRSID_SI * Tpl - t_alpha[-1])[::-1]
     # mask = (new_t_alpha < t_int[-1])&(new_t_alpha > 0.0)
-    mask = (new_t_alpha > 0.0)# & (new_t_alpha < t_int.max())
+    mask = (new_t_alpha > 0.0) & (new_t_alpha < t_int.max())
     # print((new_t_alpha > 0.0), "\n", (new_t_alpha < t_int[-1]))
 
     shape_alpha = t_alpha.shape[0]
@@ -264,18 +264,73 @@ if __name__ == "__main__":
     true_values = np.asarray([1e6, 10.0, 0.9, Tpl, 0.2, 1.0])
     
     plt.figure()
+    tic = time.time()
     t_alpha = np.arange(0, YRSID_SI/2, 5e4)
     phi_05, f_05, dotf, dotdotf = get_f_fdot_fddot_back(true_values, t_alpha)
     plt.plot(t_alpha, phi_05[0], '-o',alpha=0.5)
+    toc = time.time()
+    print("Time taken for 0.5 yr:", toc - tic)
     t_alpha = np.arange(0, YRSID_SI, 5e4)
+    tic = time.time()
     phi_1, f_1, dotf, dotdotf = get_f_fdot_fddot_back(true_values, t_alpha)
+    toc = time.time()
+    print("Time taken for 1.0 yr:", toc - tic)
     plt.plot(t_alpha, phi_1[0],'-P', alpha=0.5)
     t_alpha = np.arange(0, 1.5*YRSID_SI, 5e4)
+    tic = time.time()
     phi_15, f_15, dotf, dotdotf = get_f_fdot_fddot_back(true_values, t_alpha)
+    toc = time.time()
+    print("Time taken for 1.5 yr:", toc - tic)
     plt.plot(t_alpha, phi_15[0],'-X', alpha=0.5)
     plt.show()
-    # t, hp, hx = create_signal(true_values, T=0.01)
     
+    fig, axs = plt.subplots(3, 1, figsize=(10, 9), sharex=True)
+    
+    err_values = []
+    comp_times = []
+    phase_diffs = []
+    freq_diffs = []
+    
+    for err in np.logspace(-11, -3, 8):
+        tic = time.perf_counter()
+        for _ in range(10):
+            phi_, f_, dotf_, dotdotf_ = get_f_fdot_fddot_back(true_values, t_alpha, err=err)
+        toc = time.perf_counter()
+        comp_time = (toc - tic)/10
+        print("Time taken for 1.5 yr:", comp_time, " with err=", err)
+        phase_rel_diff = np.max(np.abs((phi_ - phi_15)))
+        print("Max difference in phase:", phase_rel_diff)
+        f_rel_diff = np.nan_to_num(np.abs(f_ - f_15)/f_15).max()
+        print("Max relative difference in frequency:", f_rel_diff)
+        
+        err_values.append(err)
+        comp_times.append(comp_time)
+        phase_diffs.append(phase_rel_diff)
+        freq_diffs.append(f_rel_diff)
+    
+    axs[0].plot(err_values, comp_times, '.-')
+    axs[0].set_xscale('log')
+    axs[0].set_ylabel('Computation time [s]')
+    axs[0].grid(True)
+    
+    axs[1].plot(err_values, phase_diffs, '.-')
+    axs[1].set_xscale('log')
+    axs[1].set_yscale('log')
+    axs[1].set_ylabel('Max phase difference')
+    axs[1].grid(True)
+    
+    axs[2].plot(err_values, freq_diffs, '.-')
+    axs[2].set_xscale('log')
+    axs[2].set_yscale('log')
+    axs[2].set_xlabel('Error tolerance')
+    axs[2].set_ylabel('Max relative freq difference')
+    axs[2].grid(True)
+    
+    plt.tight_layout()
+    plt.show()
+
+    # t, hp, hx = create_signal(true_values, T=0.01)
+
     # plt.figure(figsize=(10, 6))
     # plt.plot(t, hp, label='h_plus')
     # plt.plot(t, hx, label='h_cross')
