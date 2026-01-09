@@ -32,14 +32,14 @@ from few.utils.constants import YRSID_SI
 
 from emri_utils import get_f_fdot_fddot_back
 from search_utils import generate_emri_signal_and_sfts, det_stat
-
+import h5py
 
 # =============================================================================
 # Configuration
 # =============================================================================
 
 # SFT and observation parameters
-T_SFT = 5e4          # SFT duration [seconds]
+T_SFT = 2*86400          # SFT duration [seconds], default 5e4
 T_DATA = 1.0         # Total observation time [years]
 DELTA_T = 5.0        # Time step [seconds]
 SNR_REF = 30.0       # Reference SNR for injection
@@ -66,6 +66,16 @@ PARAM_BOUNDS = np.array([
 PARAM_NAMES = ['log10_m1', 'm2', 'a', 'Tpl', 'ef']
 NDIM = len(PARAM_NAMES)
 
+save_path = 'paper_figures/paper_results_tdi.h5'
+# Load aggregated results if available
+print(f"Loading aggregated results from {save_path}.")
+with h5py.File(save_path, 'r') as f:
+    all_best_losses_noise = f['all_best_losses_noise'][()]
+    tpl_vector = f['tpl_vector'][()]
+    mean_losses = f['mean_losses'][()]
+    lower_interval = f['lower_interval'][()]
+    upper_interval = f['upper_interval'][()]
+    best_fs = f['best_fs'][()]
 
 # =============================================================================
 # Data Generation
@@ -187,10 +197,10 @@ def compute_log_likelihood(params, t_alpha, data_sfts, m=2, n=0, delta_phi_max=1
     # Amplitude mask: valid frequency bins
     A_alpha = np.where(
         (f_alpha > 10**(-3.5)) 
-        # & 
+        & 
         # (fdot_alpha > 1e-13) 
         # & 
-        # (delta_phi_approx < delta_phi_max)
+        (delta_phi_approx < delta_phi_max)
         ,
         1.0, 0.0
     )
@@ -506,8 +516,10 @@ if __name__ == '__main__':
     data_sfts = injection_data['data_sfts']
     # data without noise
     # data_sfts = injection_data['signal_sfts']
+    new_noise_sfts = injection_data['injection_dict']['new_noise_sfts']
     t_alpha = injection_data['t_alpha']
     true_params = injection_data['true_params']
+    
     
     print(f'  Data shape: {data_sfts.shape}')
     print(f'  Time array: {len(t_alpha)} points')
@@ -522,6 +534,14 @@ if __name__ == '__main__':
     true_ll = compute_log_likelihood(true_params, *like_args)
     print(f'  True log-likelihood: {true_ll:.2f}')
     print(f'  sqrt(2 x log-likelihood): {(2*true_ll)**0.5:.2f}')
+    if T_SFT == 5e4:
+        from scipy.interpolate import interp1d
+        mean_losses = np.mean(all_best_losses_noise,axis=0)
+        std_losses = np.std(all_best_losses_noise,axis=0)
+        interp_mean = interp1d(tpl_vector, mean_losses, kind='linear')
+        interp_std = interp1d(tpl_vector, std_losses, kind='linear')
+        normalized_det_stat = (true_ll - interp_mean(true_params[3]))/interp_std(true_params[3])
+        print(f'  Normalized detection statistic: {normalized_det_stat.max():.2f}')
     
     # Compute matched SNR for reference
     samples_per_sft = int(T_SFT/DELTA_T) 
