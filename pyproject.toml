@@ -5,10 +5,10 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "emrisearch"
 description = "A package for EMRI (Extreme Mass Ratio Inspirals) Search"
-authors = [{name = ""}]
+authors = [{name = "Aldo Baglio", email="brambilla.fumagalli@cadrega.it"}, {name="Giovanni Storti"}, {name="Giacomo Poretti"}]
 readme = "README.md"
 requires-python = ">=3.8"
-license = "LICENSE.md"
+license = {file = "LICENSE.md"}
 keywords = ["gravitational-waves", "EMRI", "LISA", "parameter-estimation", "mcmc"]
 classifiers = [
     "Intended Audience :: Science/Research",
