@@ -3,15 +3,15 @@
 
 This repository implements a search pipeline for detecting Extreme Mass Ratio Inspirals (EMRIs) in simulated LISA data. Given input LISA time-series, the pipeline returns the best-matching instantaneous frequency evolution (track) found in the data. The code accompanies the related paper: [Ab uno disce omnes: Single-harmonic search for extreme mass-ratio inspirals](https://arxiv.org/abs/2510.20891). Intermediate search results can be found [here](https://public.spider.surfsara.nl/project/lisa_nlddpc/SearchResults/figures/tdi_search/).
 
-For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](QuickStartEMRIsearch.ipynb). The notebook walks through the pipeline and produces example outputs, including:
+For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](examples/QuickStartEMRIsearch.ipynb). The notebook walks through the pipeline and produces example outputs, including:
 
 - Injected waveform and three harmonics with their corresponding detection statistic values.
 
-  ![Waveform Injection](quick_start_results/true_frequency_track.png)
+  ![Waveform Injection](examples/quick_start_results/true_frequency_track.png)
 
 - Top panel: the injected EMRI signal with noise. Bottom panel: the recovered signal after masking the best-fit track of the dominant harmonic.
 
-  ![Data Comparison](quick_start_results/data_comparison.png)
+  ![Data Comparison](examples/quick_start_results/data_comparison.png)
 
 - Visualizations of the optimization process and the recovered track evolution.
 
@@ -30,17 +30,17 @@ For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](Q
 
 ## Installation
 
+`emrisearch` should be available under PyPI and thus should be easily instalable using
+```bash
+pip install emrisearch
+```
+
 ### Create a conda environment
 Recommended minimal environment:
 ```bash
 conda create -n emri -y python=3.12
 conda activate emri
-pip install eryn fastemriwaveforms multiprocess optax matplotlib scipy jupyter interpax matplotlib-label-lines lisaanalysistools astropy corner pastamarkers
-```
-
-On many Linux systems `fastlisaresponse` installs with:
-```bash
-pip install fastemriwaveforms
+pip install .
 ```
 
 On macOS arm64 a working build sequence used by the author:
@@ -60,12 +60,12 @@ python -m unittest discover
 
 Quick test for the response code:
 ```bash
-python da_utils.py
+python src/emrisearch/da_utils.py
 ```
 
 ## Quick Start
 
-Open [QuickStartEMRIsearch.ipynb](QuickStartEMRIsearch.ipynb) and run the notebook. It guides you through:
+Open [QuickStartEMRIsearch.ipynb](examples/QuickStartEMRIsearch.ipynb) and run the notebook. It guides you through:
 - generating EMRI test signals,
 - computing Short Fourier Transforms (SFTs),
 - computing the detection statistic,
@@ -73,11 +73,9 @@ Open [QuickStartEMRIsearch.ipynb](QuickStartEMRIsearch.ipynb) and run the notebo
 
 ## Repository Structure
 
-High-level overview of the repository’s key files and their purposes. Each script can be run to generate a demonstration plot showing typical usage of the functions it defines. You can run all scripts with 
+High-level overview of the modules's key files and their purposes. 
+Each script can be run to generate a demonstration plot showing typical usage of the functions it defines.
 
-```bash
-python da_utils.py; python emri_utils.py; python search_utils.py; python jax_utils.py; python jax_de_utils.py; python draw_population.py;
-```
 
 ### Core Utilities
 
