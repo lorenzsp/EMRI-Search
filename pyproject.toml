@@ -1,10 +1,9 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=61.0", "setuptools_scm[toml]>=7.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "emrisearch"
-version = "1.0.0"
 description = "A package for EMRI (Extreme Mass Ratio Inspirals) Search"
 authors = [{name = ""}]
 readme = "README.md"
@@ -12,6 +11,8 @@ requires-python = ">=3.8"
 license = {text = "MIT"}
 dependencies = [
 ]
+
+dynamic = ["version"]
 
 [project.urls]
 Homepage = "https://github.com/lorenzosp/EMRI-Search"
@@ -22,3 +23,7 @@ packages = ["emrisearch"]
 
 [tool.setuptools.package-data]
 emrisearch = ["data/*"]
+
+[tool.setuptools_scm]
+version_scheme = "guess-next-dev"
+local_scheme = "node-and-date"
