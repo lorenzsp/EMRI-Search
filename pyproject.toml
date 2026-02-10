@@ -19,3 +19,6 @@ Homepage = "https://github.com/lorenzosp/EMRI-Search"
 [tool.setuptools]
 package-dir = {"" = "src"}
 packages = ["emrisearch"]
+
+[tool.setuptools.package-data]
+emrisearch = ["data/*"]
