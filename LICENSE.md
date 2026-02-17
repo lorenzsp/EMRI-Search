@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2026 Aldo Baglio, Giovanni Storti, Giacomo Poretti
+Copyright (c) 2026 Lorenzo Speri, Rodrigo Tenorio
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
