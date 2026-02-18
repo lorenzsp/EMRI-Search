@@ -1,3 +1,4 @@
+from importlib.resources import files
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.interpolate import CubicSpline
@@ -9,10 +10,12 @@ from scipy.signal import welch
 
 tdi_flag = True  # Set to True to use TDI PSD
 
-ff, Sn = np.loadtxt('./LPA.txt',skiprows=1).T
+LPA_path = files("emrisearch.data") / "LPA.txt"
+ff, Sn = np.loadtxt(LPA_path.open("r"), skiprows=1).T
 cs = CubicSpline(ff, Sn**2)
 
-ff_tdi, Sn_tdi = np.load('./TDI2_AE_psd.npy').T
+TDI_path = files("emrisearch.data") / "TDI2_AE_psd.npy"
+ff_tdi, Sn_tdi = np.load(TDI_path.open("rb")).T
 Sn_tdi = np.clip(Sn_tdi, Sn_tdi[0], None)
 cs_tdi = CubicSpline(ff_tdi, Sn_tdi)
 
