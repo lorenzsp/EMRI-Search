@@ -1,8 +1,8 @@
 import numpy as np
 from scipy.special import fresnel
-from da_utils import psd, sft_inner_product, compute_sfts, generate_noise, get_snr
+from .da_utils import psd, sft_inner_product, compute_sfts, generate_noise, get_snr
 from scipy.signal.windows import tukey
-from emri_utils import create_signal, get_f_fdot_fddot_back
+from .emri_utils import create_signal, get_f_fdot_fddot_back
 from few.utils.constants import YRSID_SI
 
 def dirichlet_kernel(f_0, T_sft):

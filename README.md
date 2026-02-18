@@ -16,8 +16,8 @@ For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](e
 - Visualizations of the optimization process and the recovered track evolution.
 
 <p align="center">
-  <img src="quick_start_results/frequency_evolution_2panel_animation.gif" alt="Track Evolution" style="width:100%;"/>
-  <img src="quick_start_results/optimization_animation.gif" alt="Search Scatter" style="width:100%;"/>
+  <img src="examples/quick_start_results/frequency_evolution_2panel_animation.gif" alt="Track Evolution" style="width:100%;"/>
+  <img src="examples/quick_start_results/optimization_animation.gif" alt="Search Scatter" style="width:100%;"/>
 </p>
 
 ## Table of Contents
@@ -30,19 +30,21 @@ For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](e
 
 ## Installation
 
-`emrisearch` should be available under PyPI and thus should be easily instalable using
+<!-- `emrisearch` should be available under PyPI and thus should be easily instalable using
 ```bash
 pip install emrisearch
-```
+``` -->
 
 ### Create a conda environment
 Recommended minimal environment:
 ```bash
 conda create -n emri -y python=3.12
 conda activate emri
-pip install .
+pip install -e .
 ```
+with the flag `-e` for development.
 
+There is one package that needs to be installed from source `fastlisaresponse`. 
 On macOS arm64 a working build sequence used by the author:
 ```bash
 git clone https://github.com/mikekatz04/lisa-on-gpu.git
@@ -93,14 +95,23 @@ Data analysis and waveform helpers:
 
 If you use this code, please cite the paper:
 ```
-@article{Speri:2025ucn,
-    author = "Speri, Lorenzo and Tenorio, Rodrigo and Chapman-Bird, Christian and Gerosa, Davide",
-    title = "{Ab uno disce omnes: Single-harmonic search for extreme mass-ratio inspirals}",
-    eprint = "2510.20891",
-    archivePrefix = "arXiv",
-    primaryClass = "gr-qc",
-    month = "10",
-    year = "2025"
+@ARTICLE{2026PhRvD.113b4061S,
+       author = {{Speri}, Lorenzo and {Tenorio}, Rodrigo and {Chapman-Bird}, Christian and {Gerosa}, Davide},
+        title = "{Single-harmonic search for extreme mass-ratio inspirals}",
+      journal = {\prd},
+     keywords = {General relativity, alternative theories of gravity, General Relativity and Quantum Cosmology, High Energy Astrophysical Phenomena, Instrumentation and Methods for Astrophysics},
+         year = 2026,
+        month = jan,
+       volume = {113},
+       number = {2},
+          eid = {024061},
+        pages = {024061},
+          doi = {10.1103/dh3j-ksfl},
+archivePrefix = {arXiv},
+       eprint = {2510.20891},
+ primaryClass = {gr-qc},
+       adsurl = {https://ui.adsabs.harvard.edu/abs/2026PhRvD.113b4061S},
+      adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 ```
 
