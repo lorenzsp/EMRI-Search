@@ -22,7 +22,6 @@ dynamic = ["version"]
 
 dependencies = [
     "eryn",
-    "fastlisaresponse",
     "fastemriwaveforms",
     "h5py",
     "interpax",
@@ -34,10 +33,6 @@ dependencies = [
     "optax",
     "scipy",
     "torch",
-]
-
-[project.optional-dependencies]
-examples = [
     "astropy",
     "corner",
     "jupyter",
@@ -45,7 +40,6 @@ examples = [
     "pandas",
     "tqdm",
 ]
-
 
 [project.urls]
 Homepage = "https://github.com/lorenzosp/EMRI-Search"

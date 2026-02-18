@@ -5,7 +5,7 @@ from scipy.interpolate import CubicSpline
 from scipy.interpolate import make_smoothing_spline
 from scipy.signal.windows import tukey
 from few.utils.constants import YRSID_SI
-from emri_utils import create_signal
+from .emri_utils import create_signal
 from scipy.signal import welch
 
 tdi_flag = True  # Set to True to use TDI PSD
@@ -123,45 +123,6 @@ def estimate_psd_with_welch(data, deltaT, window_length=604800):
         smooth_power[i] = np.median(Pxx[idx]) if len(idx) > 0 else Pxx[i]
 
     psd_spline = CubicSpline(f, smooth_power)
-    return psd_spline
-
-def estimate_psd_from_sfts(data_sfts, freq, window_size=500):
-    """
-    Estimate the one-sided Power Spectral Density (PSD) from Short Fourier Transforms (SFTs).
-
-    Parameters
-    ----------
-    data_sfts : np.ndarray
-        Array of shape (Nsfts, Nfreqs), complex SFT data for each time segment.
-    freq : np.ndarray
-        Array of frequency bins corresponding to the columns in `data_sfts`.
-    window_size : int, optional
-        Size of the moving average window for smoothing the estimated power (default: 500 bins).
-
-    Returns
-    -------
-    psd_spline : scipy.interpolate.CubicSpline
-        A callable spline that gives the estimated PSD as a function of frequency.
-    """
-    # Compute mean power spectrum across all SFTs, excluding edge bins
-    # Exclude first and last frequency bin to avoid boundary artifacts
-    power_spectrum = np.mean(np.abs(data_sfts[:, 1:-1])**2, axis=1)
-
-    # Frequency bins used (excluding edges)
-    freq_trimmed = freq[1:-1]
-
-    # Smooth the power spectrum using a moving average
-    smooth_power = np.convolve(
-        power_spectrum, np.ones(window_size) / window_size, mode='same'
-    )
-
-    # Convert to one-sided PSD (factor of 2), scaled by frequency resolution
-    df = np.diff(freq)[0]  # assumes uniform frequency spacing
-    mean_psd = smooth_power * 2 * df
-    
-    # Interpolate PSD using cubic spline
-    psd_spline = CubicSpline(freq_trimmed, mean_psd[1:-1])
-
     return psd_spline
 
 def get_snr(signal, deltaT):
