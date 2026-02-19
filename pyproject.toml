@@ -39,6 +39,8 @@ dependencies = [
     "multiprocess",
     "pandas",
     "tqdm",
+    "scikit-learn",
+    "pastamarkers"
 ]
 
 [project.urls]

@@ -1,7 +1,8 @@
 
 # EMRI Search
 
-This repository implements a search pipeline for detecting Extreme Mass Ratio Inspirals (EMRIs) in simulated LISA data. Given input LISA time-series, the pipeline returns the best-matching instantaneous frequency evolution (track) found in the data. The code accompanies the related paper: [Ab uno disce omnes: Single-harmonic search for extreme mass-ratio inspirals](https://arxiv.org/abs/2510.20891). Intermediate search results can be found [here](https://public.spider.surfsara.nl/project/lisa_nlddpc/SearchResults/figures/tdi_search/).
+This repository implements a search pipeline for detecting Extreme Mass Ratio Inspirals (EMRIs) in simulated LISA data. Given input LISA time-series, the pipeline returns the best-matching instantaneous frequency evolution (track) found in the data. The code accompanies the related paper: [Ab uno disce omnes: Single-harmonic search for extreme mass-ratio inspirals](https://arxiv.org/abs/2510.20891). Intermediate search results can be found [here](https://public.spider.surfsara.nl/project/lisa_nlddpc/SearchResults/figures/tdi_search/). 
+If you are interested only in which sources we were able to detect check these [interactive visualizations](https://huggingface.co/spaces/lorenzsp/emrisearch).
 
 For a quick, simplified EMRI search, open and run [QuickStartEMRIsearch.ipynb](examples/QuickStartEMRIsearch.ipynb). The notebook walks through the pipeline and produces example outputs, including:
 
