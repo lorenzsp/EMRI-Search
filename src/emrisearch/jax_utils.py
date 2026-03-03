@@ -121,6 +121,61 @@ def kernel_bwd(nondiff_args, residuals, g):
 
 robust_kernel.defvjp(kernel_fwd, kernel_bwd)
 
+def local_kernel(f_0, f_1, T_sft):
+    """
+    This is the function we will call. It computes the forward pass.
+    """
+    abs_f_1 = jnp.abs(f_1)
+    return jnp.where(
+        abs_f_1 > 0., 
+        jnp.where(
+            f_1 > 0,
+            fresnel_calculation(f_0, abs_f_1, T_sft),
+            fresnel_calculation(-f_0, abs_f_1, T_sft).conj(),
+        ),
+        dirichlet_kernel(f_0, T_sft),
+    )
+
+def kernel_window(f0, f1, T_sft, alpha):
+    """
+    Compute the analytic kernel for a linear chirp with a Tukey window.
+
+    This implements the exact decomposition of the windowed Fresnel integral:
+        K_w(f_0, f_1, T) = ∫₀^T w(τ) exp[2πi (f_0 τ + ½ f_1 τ²)] dτ
+    where w(τ) is a Tukey window with taper fraction α.
+
+    The result is a sum of six rectangular chirp kernels (see analytic derivation):
+        K_w = I_C + I_L + I_R
+    with explicit formulas for each region (central, left, right tapers).
+    See the boxed formula in the Tukey window section of the TeX file.
+
+    Parameters
+    ----------
+    f0 : array_like
+        Frequency offset(s) for the kernel.
+    f1 : array_like
+        Frequency derivative(s) for the kernel.
+    T_sft : float
+        Duration of the SFT segment.
+    alpha : float
+        Tukey window taper fraction (0 = rectangular, 1 = Hann).
+
+    Returns
+    -------
+    K : ndarray
+        The analytic windowed kernel for each frequency offset and segment.
+    """
+    Delta = alpha * T_sft / 2
+    nu = 1 / (2 * Delta)
+    K_C = local_kernel(f0, f1, T_sft-Delta) - local_kernel(f0, f1, Delta)
+    K_L = 0.5 * local_kernel(f0, f1, Delta) - 0.25 * local_kernel(f0 + nu, f1, Delta) - 0.25 * local_kernel(f0 - nu, f1, Delta)
+    K_R = jnp.exp(1j * 2 * np.pi * (f0 * T_sft + 0.5 * f1 * T_sft**2)) * (
+        0.5 * local_kernel(-f0 - f1 * T_sft, f1, Delta)
+        - 0.25 * local_kernel(-f0 - f1 * T_sft + nu, f1, Delta)
+        - 0.25 * local_kernel(-f0 - f1 * T_sft - nu, f1, Delta)
+    )
+    K = K_C + K_L + K_R
+    return K
 
 # [See Eq. (7) of Tenorio & Gerosa 2025]
 def cpu_det_stat(data_sfts, A_alpha, phi_alpha, f_alpha, fdot_alpha, P=100, T_sft=86400., return_terms=False):
