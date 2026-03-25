@@ -62,7 +62,7 @@ pip install .
 python -m unittest discover
 ```
 
-Quick test:
+Test most of the functions of the package with:
 ```bash
 python -m unittest tests.test_demo
 ```
