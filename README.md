@@ -50,6 +50,7 @@ On macOS arm64 a working build sequence used by the author:
 ```bash
 git clone https://github.com/mikekatz04/lisa-on-gpu.git
 cd lisa-on-gpu
+git checkout v1.2.1a0
 
 conda install conda-forge::clang_osx-arm64 conda-forge::clangxx_osx-arm64 -y
 export CC=$(which clang)
@@ -61,9 +62,9 @@ pip install .
 python -m unittest discover
 ```
 
-Quick test for the response code:
+Quick test:
 ```bash
-python src/emrisearch/da_utils.py
+python -m unittest tests.test_demo
 ```
 
 ## Quick Start

@@ -27,7 +27,6 @@ dependencies = [
     "interpax",
     "jax",
     "jaxlib",
-    "lisatools",
     "matplotlib",
     "numpy",
     "optax",
@@ -40,7 +39,8 @@ dependencies = [
     "pandas",
     "tqdm",
     "scikit-learn",
-    "pastamarkers"
+    "pastamarkers",
+    "lisaanalysistools==1.2.0"
 ]
 
 [project.urls]
