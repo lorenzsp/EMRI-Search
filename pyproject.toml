@@ -7,7 +7,7 @@ name = "emrisearch"
 description = "A package for EMRI (Extreme Mass Ratio Inspirals) Search"
 authors = [{name = "Lorenzo Speri", email="lorenzo.speri@esa.int"}, {name="Rodrigo Tenorio", email="rodrigo.tenorio@unimib.it"}]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 license = {file = "LICENSE.md"}
 keywords = ["gravitational-waves", "EMRI", "LISA", "parameter-estimation", "mcmc"]
 classifiers = [
@@ -27,7 +27,6 @@ dependencies = [
     "interpax",
     "jax",
     "jaxlib",
-    "lisatools",
     "matplotlib",
     "numpy",
     "optax",
@@ -40,7 +39,9 @@ dependencies = [
     "pandas",
     "tqdm",
     "scikit-learn",
-    "pastamarkers"
+    "pastamarkers",
+    "lisaanalysistools>=1.2.0",
+    "gpubackendtools>=0.0.18",
 ]
 
 [project.urls]
