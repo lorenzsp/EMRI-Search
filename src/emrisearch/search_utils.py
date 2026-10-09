@@ -86,7 +86,6 @@ def det_stat(data_sfts, A_alpha, phi_alpha, f_alpha, fdot_alpha, P=100, T_sft=86
         * zero_mask
     ).sum(axis=0)
 
-    c_alpha = np.nan_to_num(c_alpha, copy=False, nan=0.0, posinf=0.0, neginf=0.0)
     dh_term = 2 * A_alpha * c_alpha * np.exp(1j * phi_alpha)
     hh_term = T_sft * (A_alpha**2/psd(f_alpha))/2
     return dh_term, hh_term
