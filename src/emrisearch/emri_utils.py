@@ -228,7 +228,7 @@ def create_signal(params,
         Phi_r0=np.random.uniform(0,2*np.pi)
 
     m1, m2, a, Tpl, ef, x0 = params.T
-    p_f = traj.inspiral_generator.func.separatrix_buffer_dist + get_separatrix(a, ef, 1.0) + 1e-6
+    p_f = traj.inspiral_generator.func.separatrix_buffer_dist + get_separatrix(a, ef, x0) + 1e-6
     backwards_result = traj(m1, m2, a, p_f, ef, x0, T=Tpl, integrate_backwards=True)
     p0_true = backwards_result[1][-1]
     e0_true = backwards_result[2][-1]
