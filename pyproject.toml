@@ -22,7 +22,7 @@ dynamic = ["version"]
 
 dependencies = [
     "eryn",
-    "fastemriwaveforms",
+    "fastemriwaveforms==2.0",
     "h5py",
     "interpax",
     "jax",

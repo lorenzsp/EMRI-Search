@@ -187,7 +187,7 @@ def cpu_det_stat(data_sfts, A_alpha, phi_alpha, f_alpha, fdot_alpha, P=100, T_sf
 
     # Set to 0 whatever gets beyond the range.
     # Note that jax will not complain about out-of-range indexing
-    zero_mask = jnp.logical_and(k_min_max >= 0, k_min_max < data_sfts.shape[0]//2)
+    zero_mask = jnp.logical_and(k_min_max >= 0, k_min_max < data_sfts.shape[0])
     # zero_mask = (k_min_max < data_sfts.shape[0]//2)
     kernel = robust_kernel(f_alpha - k_min_max * deltaf, fdot_alpha, T_sft)
     c_alpha = (
@@ -197,7 +197,7 @@ def cpu_det_stat(data_sfts, A_alpha, phi_alpha, f_alpha, fdot_alpha, P=100, T_sf
         * zero_mask
     ).sum(axis=0)
     dh_term = 2 * jnp.abs(A_alpha * c_alpha) # jnp.exp(1j * phi_alpha) * 
-    hh_term = T_sft * A_alpha**2 / psd(f_alpha) / 2
+    hh_term = T_sft * A_alpha**2 / psd(f_alpha)
     # breakpoint()  # For debugging purposes, remove in production
     if return_terms:
         return 0.5 * jnp.nan_to_num(jnp.abs(dh_term)**2 / hh_term).sum(), dh_term, hh_term
@@ -252,14 +252,14 @@ def det_stat(data_sfts, f_alpha, fdot_alpha, P=100, T_sft=5e4):
     ).sum(axis=0)
 
     dh_term_abs = 2 * jnp.abs(c_alpha)
-    hh_term = 0.5 * T_sft / psd(f_alpha) # Using continuous f_alpha here is fine
+    hh_term = T_sft / psd(f_alpha) # Using continuous f_alpha here is fine
     
     fddot_alpha =  jnp.gradient(fdot_alpha, T_sft)
     delta_phi_approx = jnp.abs(fddot_alpha * T_sft**3 / 6)
 
     # A_alpha = jnp.where((f_alpha > 5e-4) & (fdot_alpha > 0) & (delta_phi_approx < 0.1), 1.0, 0.0)
-    # A_alpha = jnp.where((f_alpha > 10**(-3.5)) & (f_alpha < 10**(-2.0)) & (fdot_alpha > 1e-13) & (fdot_alpha < 1e-6) & (delta_phi_approx < 0.1), 1.0, 0.0)
-    A_alpha = jnp.where((f_alpha > 10**(-3.5)) & (fdot_alpha > 1e-13) & (delta_phi_approx < 1.0), 1.0, 0.0)
+    A_alpha = jnp.where((f_alpha > 10**(-3.5)) & (f_alpha < 10**(-2.0)) & (fdot_alpha > 1e-13) & (fdot_alpha < 1e-6) & (delta_phi_approx < 0.1), 1.0, 0.0)
+    # A_alpha = jnp.where((f_alpha > 10**(-3.5)) & (delta_phi_approx < 1.0), 1.0, 0.0)
     # if the sum is non zero, return standard result, otherwise return zero
     return jnp.where(A_alpha.sum()!=0.0, 0.5 * (A_alpha * dh_term_abs**2 / hh_term).sum(), 0.0)
 

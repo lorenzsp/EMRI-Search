@@ -87,7 +87,7 @@ def det_stat(data_sfts, A_alpha, phi_alpha, f_alpha, fdot_alpha, P=100, T_sft=86
     ).sum(axis=0)
 
     dh_term = 2 * A_alpha * c_alpha * np.exp(1j * phi_alpha)
-    hh_term = T_sft * (A_alpha**2/psd(f_alpha))/2
+    hh_term = T_sft * (A_alpha**2/psd(f_alpha))
     return dh_term, hh_term
 
 def generate_emri_signal_and_sfts(true_values, T_data, T_sft, deltaT, snr_ref, T_snr):
